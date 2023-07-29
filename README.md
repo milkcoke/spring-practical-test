@@ -54,6 +54,48 @@ public class CafeKiosk {
 }
 ```
 
+### DisplayName 은 동사로 써라.
+명사 나열 보다는 동사형 문장이 더 쉽게 이해된다. \
+테스트는 곧 문서가 된다.
+#### AS-IS
+```java
+// 명사형
+@Test
+@DisplayName("success - 아메리카노 2잔 추가 테스트")
+void addSeveralBeverages() {
+    var cafeKiosk = new CafeKiosk();
+    cafeKiosk.add(new Americano(), 2);
+    assertThat(cafeKiosk.getBeverages()).hasSize(2);
+}
+```
+#### TO-BE
+```java
+@Test
+@DisplayName("success - 아메리카노 2잔 추가시 2잔이 주문 목록에 담긴다.")
+void addSeveralBeverages() {
+    var cafeKiosk = new CafeKiosk();
+    cafeKiosk.add(new Americano(), 2);
+    assertThat(cafeKiosk.getBeverages()).hasSize(2);
+}
+```
+> 메소드 관점보다 **도메인 용어**를 써라
+> 
+#### AS-IS
+특정 시간 이전 주문 실패
+#### TO-BE
+카페 영업 시간 이전 주문 불가
+
+실패와 성공 같은 **테스트 현상**을 설명할 필요가 없다.
+**도메인 관점에서 작성하라.**
+
+## BDD
+Behavior Driven Development
+- 함수 단위 테스트보다 시나리오 기반 TC에 집중.
+- 개발자가 아닌 사람이 봐도 이해할 수 있을 정도의 추상화 필요.
+
+#### How to?
+- Given - When - Then == Arrange - Act - Assert
+
 # Spring Container
 ## Tomcat Servlet Container
 ![Servlet Container](src/main/resources/assets/SpringBoot_Tomcat_ReqRes.png)
