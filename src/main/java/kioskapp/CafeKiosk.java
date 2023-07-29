@@ -39,11 +39,9 @@ public class CafeKiosk {
     }
 
     public int calculateTotalPrice() {
-        int totalPrice = 0;
-        for (var beverage : beverages) {
-            totalPrice += beverage.getPrice();
-        }
-        return totalPrice;
+        return this.beverages.stream()
+                .mapToInt(Beverage::getPrice)
+                .sum();
     }
 
     /*
