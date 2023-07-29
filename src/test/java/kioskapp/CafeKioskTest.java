@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 class CafeKioskTest {
 
     @Test
-    @DisplayName("success - 아메리카노 추가 테스트")
+    @DisplayName("success - 아메리카노 1잔 추가시 주문 목록에 담긴다.")
     void add() {
         var cafeKiosk = new CafeKiosk();
         cafeKiosk.add(new Americano());
@@ -23,7 +23,7 @@ class CafeKioskTest {
     }
 
     @Test
-    @DisplayName("success - 아메리카노 2잔 추가 테스트")
+    @DisplayName("success - 아메리카노 2잔 추가시 주문 목록에 2잔 담긴다.")
     void addSeveralBeverages() {
         // Arrange
         var cafeKiosk = new CafeKiosk();
@@ -36,7 +36,7 @@ class CafeKioskTest {
     }
 
     @Test
-    @DisplayName("fail - 아메리카노 0잔 이하 추가 불가능")
+    @DisplayName("fail - 아메리카노 0잔 이하 추가 주문 불가능")
     void failedToAddServeralBeverages() {
         var cafeKiosk = new CafeKiosk();
         assertThatThrownBy(() -> cafeKiosk.add(new Americano(), 0))
@@ -45,7 +45,7 @@ class CafeKioskTest {
     }
 
     @Test
-    @DisplayName("success - 담은 음료 제거 테스트")
+    @DisplayName("success - 아메리카노 한잔 담았다가 취소하면 목록에서 제거된다.")
     void remove() {
         // Arrange
         var cafeKiosk = new CafeKiosk();
@@ -63,7 +63,7 @@ class CafeKioskTest {
     }
 
     @Test
-    @DisplayName("success - 모든 음료 제거 테스트")
+    @DisplayName("success - 모든 음료 취소시 주문 목록이 0잔이 된다.")
     void clear() {
         // Arrange
         var cafeKiosk = new CafeKiosk();
@@ -80,7 +80,7 @@ class CafeKioskTest {
     }
 
     @Test
-    @DisplayName("success - 영업 시작 시간 07시 주문 성공")
+    @DisplayName("success - 영업 시작 시간 07시 주문 가능")
     void createOrderWithOpenTime() {
         // Arrange
         var cafeKiosk = new CafeKiosk();
@@ -96,7 +96,7 @@ class CafeKioskTest {
     }
 
     @Test
-    @DisplayName("fail - 영업 시작 시간 7시 이전 주문 실패")
+    @DisplayName("fail - 영업 시작 시간 7시 이전 주문 불가")
     void createOrderWithBeforeOpenTime() {
         // Arrange
         var cafeKiosk = new CafeKiosk();
@@ -111,7 +111,7 @@ class CafeKioskTest {
     }
 
     @Test
-    @DisplayName("success - 아메리카노 2잔 및 라떼 2잔 총 가격 17000원")
+    @DisplayName("success - 아메리카노 2잔 및 라떼 2잔 총 가격 17,000원")
     void calculateTotalPrice() {
         // Arrange
         var cafeKiosk = new CafeKiosk();
