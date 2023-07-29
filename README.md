@@ -11,6 +11,16 @@ Test 하기 어려운 영역은 크게 2가지다.
 > 테스트 용이하기 위한 코드로 변경하기 위해 
 > 해당 영역을 **외부로 분리**해야한다.
 
+### 3. RED - GREEN - Refactor
+![TDD Lifecycle.png](src/main/resources/assets/Test-RedGreenRefactoring.png)
+
+### Why first test?
+- 엣지 케이스를 놓치지 않을 수 있게 된다. \
+선 구현 방식은 테스트 케이스를 작성할 때 이미 편협한 상태가 된다. (인간의 사고상)
+- 빠른 피드백으로 코드 변경이 용이해진다.
+- 애초에 이해하기 쉽고 간단한 테스트 케이스를 작성하게된다. \
+=> Maintainable code
+- 테스트를 먼저 썼기 때문에 , 구현부에서도 테스트 가능한 코드를 쓰게된다. (관점의 변화)
 ```java
 @Getter
 public class CafeKiosk {
