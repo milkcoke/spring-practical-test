@@ -109,4 +109,19 @@ class CafeKioskTest {
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("You cannot place an order between 07:00 and 18:00");
     }
+
+    @Test
+    @DisplayName("success - 아메리카노 2잔 및 라떼 2잔 총 가격 17000원")
+    void calculateTotalPrice() {
+        // Arrange
+        var cafeKiosk = new CafeKiosk();
+        cafeKiosk.add(new Americano(), 2);
+        cafeKiosk.add(new Latte(), 2);
+
+        // Act
+        var totalPrice = cafeKiosk.calculateTotalPrice();
+
+        // Assert
+        assertThat(totalPrice).isEqualTo(17_000);
+    }
 }
