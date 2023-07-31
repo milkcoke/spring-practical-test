@@ -15,11 +15,28 @@ import java.util.stream.Collectors;
 public class ProductService {
     private final ProductRepository productRepository;
 
+    public List<ProductResponse> getAllProducts() {
+        var products = this.productRepository.findAll();
+        return products.stream()
+                .map(ProductResponse::of)
+                .collect(Collectors.toList());
+    }
     /**
      * 판매 중인 상품 목록 반환
      */
     public List<ProductResponse> getSellingProducts() {
-        List<Product> products = productRepository.findAllBySellingStatusIn(ProductSellingStatus.forDisplay());
+        List<Product> products = this.productRepository.findAllBySellingStatusIn(ProductSellingStatus.forDisplay());
+
+        return products.stream()
+                .map(ProductResponse::of)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 판매 중지된 상품 목록 반환
+     */
+    public List<ProductResponse> getNotSellingProducts() {
+        List<Product> products = this.productRepository.findAllBySellingStatusIs(ProductSellingStatus.STOP);
 
         return products.stream()
                 .map(ProductResponse::of)
