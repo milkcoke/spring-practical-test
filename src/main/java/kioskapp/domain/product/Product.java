@@ -20,5 +20,5 @@ public class Product {
     private ProductType productType;
 
     @Enumerated(EnumType.STRING)
-    private ProductSellingType productSellingType;
+    private ProductSellingStatus productSellingStatus;
 }
