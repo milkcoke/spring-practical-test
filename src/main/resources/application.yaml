@@ -3,7 +3,9 @@ spring:
     default: local
 
   datasource:
-    url: jdbc:h2:mem:cafe
+    # Automatic Mixed mode
+    # Reference: https://www.h2database.com/html/features.html#auto_mixed_mode
+    url: jdbc:h2:~/cafe-kiosk;AUTO_SERVER=8082
     driver-class-name: org.h2.Driver
     username: sa
     password:
