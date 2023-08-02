@@ -13,11 +13,11 @@ import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
-import static kioskapp.domain.product.ProductSellingStatus.*;
+import static kioskapp.domain.product.ProductSellingStatus.SELLING;
 import static kioskapp.domain.product.ProductType.BAKERY;
 import static kioskapp.domain.product.ProductType.HANDMADE;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.tuple;
+import static org.assertj.core.groups.Tuple.tuple;
 
 @ActiveProfiles("test")
 @SpringBootTest
@@ -26,18 +26,6 @@ class OrderServiceTest {
     private OrderService orderService;
     @Autowired
     private ProductRepository productRepository;
-
-    // given 에 필요한 데이터만 주기 위해 product 생성 helper 메소드
-    // 테스트에 필요한 메소드 생성
-    private Product createProduct(ProductType productType, String productNumber, String name, int price) {
-        return Product.builder()
-                .type(productType)
-                .productNumber(productNumber)
-                .name(name)
-                .price(price)
-                .sellingStatus(SELLING)
-                .build();
-    }
 
     @Test
     @DisplayName("주문 번호 리스트를 받아 주문 생성")
@@ -48,7 +36,7 @@ class OrderServiceTest {
       Product pineappleBread = createProduct(BAKERY, "003", "소보로빵", 1500);
       productRepository.saveAll(List.of(americano, cafeLatte, pineappleBread));
       OrderCreateRequest orderCreateRequest = OrderCreateRequest.builder()
-              .productNumbers(List.of("001, 002"))
+              .productNumbers(List.of("001", "002"))
               .build();
 
       // when
@@ -62,5 +50,17 @@ class OrderServiceTest {
                       tuple("001", "아메리카노", 4000),
                       tuple("002", "카페라떼", 4500)
               );
+    }
+
+    // given 에 필요한 데이터만 주기 위해 product 생성 helper 메소드
+    // 테스트에 필요한 메소드 생성
+    private Product createProduct(ProductType productType, String productNumber, String name, int price) {
+        return Product.builder()
+                .type(productType)
+                .productNumber(productNumber)
+                .name(name)
+                .price(price)
+                .sellingStatus(SELLING)
+                .build();
     }
 }
