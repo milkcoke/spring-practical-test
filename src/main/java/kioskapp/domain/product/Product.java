@@ -3,6 +3,7 @@ package kioskapp.domain.product;
 import jakarta.persistence.*;
 import kioskapp.domain.BaseEntity;
 import lombok.AccessLevel;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -22,4 +23,13 @@ public class Product extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     private ProductSellingStatus sellingStatus;
+
+    @Builder
+    private Product(String name, int price, String productNumber, ProductType type, ProductSellingStatus sellingStatus) {
+        this.name = name;
+        this.price = price;
+        this.productNumber = productNumber;
+        this.type = type;
+        this.sellingStatus = sellingStatus;
+    }
 }
