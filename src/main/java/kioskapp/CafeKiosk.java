@@ -1,7 +1,7 @@
 package kioskapp;
 
 import kioskapp.domain.beverage.Beverage;
-import kioskapp.domain.order.Order;
+import kioskapp.domain.order.CafeOrder;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
@@ -48,24 +48,24 @@ public class CafeKiosk {
     * 테스트 어려운 코드
     * 랜덤값, 현재 시간 값 등 Input 의 예측 불가능성
     */
-    public Order createOrder() {
+    public CafeOrder createOrder() {
         LocalDateTime currentDateTime = LocalDateTime.now();
         LocalTime currentTime = currentDateTime.toLocalTime();
         if (currentTime.isBefore(SHOP_OPEN_TIME) || currentTime.isAfter(SHOP_CLOSE_TIME)) {
             throw new IllegalArgumentException("You cannot place an order between 07:00 and 18:00");
         }
-        return new Order(LocalDateTime.now(), beverages);
+        return new CafeOrder(LocalDateTime.now(), beverages);
     }
 
     /*
     * 테스트 용이한 코드
     * Input 의 의존성을 외부로 분리하여 예측 가능성.
     */
-    public Order createOrder(LocalDateTime currentDateTime) {
+    public CafeOrder createOrder(LocalDateTime currentDateTime) {
         LocalTime currentTime = currentDateTime.toLocalTime();
         if (currentTime.isBefore(SHOP_OPEN_TIME) || currentTime.isAfter(SHOP_CLOSE_TIME)) {
             throw new IllegalArgumentException("You cannot place an order between 07:00 and 18:00");
         }
-        return new Order(LocalDateTime.now(), beverages);
+        return new CafeOrder(LocalDateTime.now(), beverages);
     }
 }
