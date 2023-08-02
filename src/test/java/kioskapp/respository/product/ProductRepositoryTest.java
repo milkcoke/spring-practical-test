@@ -80,4 +80,20 @@ class ProductRepositoryTest {
                         tuple("003", BAKERY, STOP, "소보로빵", 1500)
                 );
     }
+
+    @Test
+    @DisplayName("상품 번호 리스트와 일치하는 상품 조회")
+    void findAllByProductNumberIn() {
+        // given
+        productRepository.saveAll(List.of(americano, cafeLatte, pineappleBread));
+        // when
+        List<Product> products = productRepository.findAllByProductNumberIn(List.of("002", "003"));
+        // then
+        assertThat(products).hasSize(2)
+                .extracting("name", "price")
+                .containsExactlyInAnyOrder(
+                        tuple("카페라떼", 4500),
+                        tuple("소보로빵", 1500)
+                );
+    }
 }
