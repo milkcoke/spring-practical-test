@@ -17,7 +17,9 @@ import static org.assertj.core.api.Assertions.tuple;
 
 @ActiveProfiles("test")
 //@SpringBootTest // Scan all components
-@DataJpaTest // Repository 관련 Components 만 load
+// Transactional 에 의해 자동 Rollback
+// Repository 관련 Components 만 load
+@DataJpaTest
 class ProductRepositoryTest {
     @Autowired
     private ProductRepository productRepository;
