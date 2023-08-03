@@ -2,6 +2,7 @@ package kioskapp.domain.product;
 
 import jakarta.persistence.*;
 import kioskapp.domain.BaseEntity;
+import kioskapp.domain.stock.Stock;
 import lombok.AccessLevel;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,12 +25,18 @@ public class Product extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ProductSellingStatus sellingStatus;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private Stock stock;
+
     @Builder
-    private Product(String name, int price, String productNumber, ProductType type, ProductSellingStatus sellingStatus) {
+    private Product(String name, int price, String productNumber, ProductType type, ProductSellingStatus sellingStatus, Stock stock) {
         this.name = name;
         this.price = price;
         this.productNumber = productNumber;
         this.type = type;
         this.sellingStatus = sellingStatus;
+        if (ProductType.hasStock(type)) {
+            this.stock = stock;
+        }
     }
 }
