@@ -11,7 +11,6 @@ import kioskapp.service.order.dto.OrderCreateResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -35,6 +34,11 @@ public class OrderService {
         Order order = new Order(orderProducts);
         this.orderRepository.save(order);
 
+        // TODO
+        //      Group By 주문번호 -> 상품별 재고 파악.
+        //      재고 조회
+        //      재고 차감 시도
+        //      성공시 넘어가고 아니면 에러처리
         return OrderCreateResponse.of(order);
     }
 

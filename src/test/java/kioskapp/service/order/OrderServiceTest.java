@@ -4,6 +4,7 @@ import kioskapp.domain.product.Product;
 import kioskapp.domain.product.ProductType;
 import kioskapp.respository.orderproduct.OrderProductRepository;
 import kioskapp.respository.product.ProductRepository;
+import kioskapp.respository.stock.StockRepository;
 import kioskapp.service.order.dto.OrderCreateRequest;
 import kioskapp.service.order.dto.OrderCreateResponse;
 import org.junit.jupiter.api.AfterEach;
@@ -30,6 +31,9 @@ class OrderServiceTest {
     private ProductRepository productRepository;
     @Autowired
     private OrderProductRepository orderProductRepository;
+
+    @Autowired
+    private StockRepository stockRepository;
 
     @AfterEach
     void clean() {
