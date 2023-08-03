@@ -2,6 +2,7 @@ package kioskapp.controller.order;
 
 import kioskapp.service.order.OrderService;
 import kioskapp.service.order.dto.OrderCreateRequest;
+import kioskapp.service.order.dto.OrderCreateResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -13,7 +14,7 @@ public class OrderController {
     private final OrderService orderService;
 
     @PostMapping("/api/v1/orders/")
-    public void postOrder(@RequestBody OrderCreateRequest orderCreateRequest) {
-        // TODO: Implement
+    public OrderCreateResponse postOrder(@RequestBody OrderCreateRequest orderCreateRequest) {
+        return orderService.createOrder(orderCreateRequest);
     }
 }
