@@ -1,5 +1,6 @@
 package kioskapp.domain.order;
 
+import kioskapp.domain.orderproduct.OrderProduct;
 import kioskapp.domain.product.Product;
 import kioskapp.respository.order.OrderRepository;
 import org.junit.jupiter.api.DisplayName;
@@ -35,9 +36,12 @@ class OrderTest {
     void calculateTotalPrice() {
         // given
         var products = List.of(americano, latte, pineappleBread);
+        var orderProducts = products.stream()
+                .map(OrderProduct::new)
+                .toList();
 
         // when
-        Order order = new Order(products);
+        Order order = new Order(orderProducts);
 
         // then
         assertThat(order.getTotalPrice()).isEqualTo(10_000);
@@ -48,8 +52,12 @@ class OrderTest {
     public void initStatus() {
         // given
         var products = List.of(americano, latte, pineappleBread);
+        var orderProducts = products.stream()
+                .map(OrderProduct::new)
+                .toList();
+
         // when
-        Order order = new Order(products);
+        Order order = new Order(orderProducts);
         // then
         assertThat(order.getOrderStatus()).isEqualTo(OrderStatus.INIT);
     }
@@ -58,7 +66,11 @@ class OrderTest {
     public void checkCreatedTime() {
         // given
         var products = List.of(americano, latte, pineappleBread);
-        Order order = new Order(products);
+        var orderProducts = products.stream()
+                .map(OrderProduct::new)
+                .toList();
+
+        Order order = new Order(orderProducts);
         // when
         this.orderRepository.save(order);
         // then

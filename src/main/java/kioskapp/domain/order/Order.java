@@ -26,21 +26,21 @@ public class Order extends BaseEntity {
 
     private int totalPrice;
 
-    // FIXME: 연관관계 주인 다시 살펴보기
-    // 양방향 연관관계 주인 == 외래키가 있는 객체
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderProduct> orderProducts = new ArrayList<>();
 
-    public Order(List<Product> products) {
+    public Order(List<OrderProduct> orderProducts) {
         this.orderStatus = OrderStatus.INIT;
-        this.totalPrice = calculateTotalPrice(products);
-        this.orderProducts = products.stream()
-                .map(product -> new OrderProduct(this, product))
-                .collect(Collectors.toList());
+        this.totalPrice = calculateTotalPrice(orderProducts);
+        this.orderProducts = orderProducts;
+        for (var orderProduct  : orderProducts) {
+            orderProduct.updateOrder(this);
+        }
     }
 
-    private static int calculateTotalPrice(List<Product> products) {
-        return products.stream()
+    private static int calculateTotalPrice(List<OrderProduct> orderProducts) {
+        return orderProducts.stream()
+                .map(OrderProduct::getProduct)
                 .mapToInt(Product::getPrice)
                 .sum();
     }
