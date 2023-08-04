@@ -25,9 +25,11 @@ public class Product extends BaseEntity {
     @Enumerated(EnumType.STRING)
     private ProductSellingStatus sellingStatus;
 
+    //TODO: java: cannot find symbol issue 해결
+//    @Builder.Default
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JoinColumn(name = "stock_id", referencedColumnName = "id")
-    private Stock stock;
+    private Stock stock = null;
 
     @Builder
     private Product(String name, int price, String productNumber, ProductType type, ProductSellingStatus sellingStatus, Stock stock) {

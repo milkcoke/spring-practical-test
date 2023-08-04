@@ -2,6 +2,8 @@ package kioskapp.domain.order;
 
 import kioskapp.domain.orderproduct.OrderProduct;
 import kioskapp.domain.product.Product;
+import kioskapp.domain.product.ProductType;
+import kioskapp.domain.stock.Stock;
 import kioskapp.respository.order.OrderRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,16 +22,20 @@ class OrderTest {
     Product americano = Product.builder()
             .name("Americano")
             .price(4000)
+            .type(ProductType.HANDMADE)
             .build();
 
     Product latte = Product.builder()
             .name("latte")
             .price(4500)
+            .type(ProductType.HANDMADE)
             .build();
 
     Product pineappleBread = Product.builder()
             .name("소보로빵")
             .price(1500)
+            .type(ProductType.BAKERY)
+            .stock(new Stock(5))
             .build();
     @Test
     @DisplayName("주문 시점에 주문 총 금액 표기")
