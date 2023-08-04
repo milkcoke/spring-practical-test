@@ -36,17 +36,53 @@ public class OrderService {
                 .toList();
 
         Order order = new Order(orderProducts);
-        this.orderRepository.save(order);
 
-        // (1) 재고관리 대상 상품ID : 현재 주문량  // findAllProductByProductNumbersIn 로 ID 구하고, collect.counting 으로 주문 개수 확인
+        // (1) 재고관리 대상 상품ID : 현재 주문량 map 생성
         List<Product> productsHavingStockList = getProductsHavingStock(allProducts);
-
         Set<Product> productsHavingStockSet = new HashSet<>(productsHavingStockList);
-        Map<String, Long> mapProductCount =productsHavingStockList.stream()
+        Map<String, Long> mapProductCount = productsHavingStockList.stream()
                         .map(Product::getProductNumber)
                         .collect(Collectors.groupingBy(productNumber->productNumber, Collectors.counting()));
 
         // (2) ID별 재고 조회
+        if (isExistNotEnoughStockProduct(productsHavingStockSet, mapProductCount, order)) {
+            throw new IllegalArgumentException("재고가 부족한 상품을 주문했습니다.");
+        };
+
+        // (3) 재고 차감 처리
+        processStockOfProduct(productsHavingStockSet, mapProductCount);
+
+        this.productRepository.saveAll(productsHavingStockSet.stream().toList());
+
+        // (4) 주문 처리
+        var savedOrder = this.orderRepository.save(order);
+        return OrderCreateResponse.of(savedOrder);
+    }
+
+    private List<Product> getProductsHavingStock(List<Product> products) {
+        return products.stream()
+            .filter(product -> ProductType.hasStock(product.getType()))
+            .toList();
+    }
+
+    private List<Product> getAllProductByProductNumbers(List<Product> uniqueProducts, List<String> productNumbers) {
+        // productNumbers 에 매핑된 product 를 모두 가져온다.
+        Map<String, Product> productNumberMap = uniqueProducts.stream()
+            .collect(Collectors.toMap(Product::getProductNumber, product->product));
+
+        return productNumbers.stream()
+            .map(productNumberMap::get)
+            .toList();
+    }
+    private void processStockOfProduct(Set<Product> productsHavingStockSet, Map<String, Long> mapProductCount) {
+        for (Product product : productsHavingStockSet) {
+            var productQuantity = mapProductCount.get(product.getProductNumber());
+            var stock = product.getStock();
+            stock.deductQuantity(productQuantity.intValue());
+        }
+    }
+
+    private boolean isExistNotEnoughStockProduct(Set<Product> productsHavingStockSet, Map<String, Long> mapProductCount, Order order) {
         for (var product : productsHavingStockSet) {
             // 무조건 map 에 있는 값만 남아있을 것.
             var productQuantity = mapProductCount.get(product.getProductNumber());
@@ -54,38 +90,10 @@ public class OrderService {
             if (!stock.hasEnoughQuantity(productQuantity.intValue())) {
                 // (3 - A) 재고 없으면 예외하고 주문 상태 변경
                 order.updateOrderStatus(OrderStatus.CANCELED);
-                throw new IllegalArgumentException("재고가 부족한 상품을 주문했습니다.");
+                return true;
             }
         }
 
-        // (3 - B) 재고 있으면 재고 차감
-        for (Product product : productsHavingStockSet) {
-            // productId 에 해당하는 product 를 불러올 수 가 없네 아 ..
-            // 위에서 이미 재고 조회 했으니 검사 없이 차감만.
-            var productQuantity = mapProductCount.get(product.getProductNumber());
-            var stock = product.getStock();
-            stock.deductQuantity(productQuantity.intValue());
-        }
-
-        this.productRepository.saveAll(productsHavingStockSet.stream().toList());
-
-        // (4) 주문 처리
-        return OrderCreateResponse.of(order);
-    }
-
-    private List<Product> getProductsHavingStock(List<Product> products) {
-        return products.stream()
-                .filter(product -> ProductType.hasStock(product.getType()))
-                .toList();
-    }
-
-    private List<Product> getAllProductByProductNumbers(List<Product> uniqueProducts, List<String> productNumbers) {
-        // productNumbers 에 매핑된 product 를 모두 가져온다.
-        Map<String, Product> productNumberMap = uniqueProducts.stream()
-                        .collect(Collectors.toMap(Product::getProductNumber, product->product));
-
-        return productNumbers.stream()
-                .map(productNumberMap::get)
-                .toList();
+        return false;
     }
 }
