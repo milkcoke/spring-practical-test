@@ -26,6 +26,7 @@ public class Product extends BaseEntity {
     private ProductSellingStatus sellingStatus;
 
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "stock_id", referencedColumnName = "id")
     private Stock stock;
 
     @Builder
