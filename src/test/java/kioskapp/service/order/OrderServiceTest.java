@@ -2,6 +2,7 @@ package kioskapp.service.order;
 
 import kioskapp.domain.product.Product;
 import kioskapp.domain.product.ProductType;
+import kioskapp.domain.stock.Stock;
 import kioskapp.respository.orderproduct.OrderProductRepository;
 import kioskapp.respository.product.ProductRepository;
 import kioskapp.respository.stock.StockRepository;
@@ -17,8 +18,7 @@ import org.springframework.test.context.ActiveProfiles;
 import java.util.List;
 
 import static kioskapp.domain.product.ProductSellingStatus.SELLING;
-import static kioskapp.domain.product.ProductType.BAKERY;
-import static kioskapp.domain.product.ProductType.HANDMADE;
+import static kioskapp.domain.product.ProductType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.tuple;
 
@@ -40,9 +40,9 @@ class OrderServiceTest {
         this.orderProductRepository.deleteAllInBatch();
         this.productRepository.deleteAllInBatch();
     }
-    Product americano = createProduct(HANDMADE, "001", "아메리카노", 4000);
-    Product cafeLatte = createProduct(HANDMADE, "002", "카페라떼", 4500);
-    Product pineappleBread = createProduct(BAKERY, "003", "소보로빵", 1500);
+    Product americano = createProduct(HANDMADE, "001", "아메리카노", 4000, null);
+    Product cafeLatte = createProduct(HANDMADE, "002", "카페라떼", 4500, null);
+    Product pineappleBread = createProduct(BAKERY, "003", "소보로빵", 1500, new Stock(10));
 
     @Test
     @DisplayName("주문 번호 리스트를 받아 주문 생성")
@@ -88,13 +88,36 @@ class OrderServiceTest {
 
     // given 에 필요한 데이터만 주기 위해 product 생성 helper 메소드
     // 테스트에 필요한 메소드 생성
-    private Product createProduct(ProductType productType, String productNumber, String name, int price) {
+    private Product createProduct(ProductType productType, String productNumber, String name, int price, Stock stock) {
         return Product.builder()
                 .type(productType)
                 .productNumber(productNumber)
                 .name(name)
                 .price(price)
                 .sellingStatus(SELLING)
+                .stock(stock)
                 .build();
+    }
+
+    @Test
+    @DisplayName("병음료, 빵 등 재고가 남은 상품번호 리스트를 받아 주문하여 정상 재고 차감된다.")
+    public void createOrderWithStock() {
+      // given
+      Product cafeMocha = createProduct(HANDMADE, "004", "카페모카", 4000, null);
+      Product grapefruitSmoothie = createProduct(BOTTLE, "005", "자몽 스무디", 5500, new Stock(10));
+      Product bread = createProduct(BAKERY, "006", "찰깨빵", 1500, new Stock(10));
+      var products = List.of(cafeMocha, grapefruitSmoothie, grapefruitSmoothie, bread);
+      productRepository.saveAll(products);
+
+      var productNumbers = List.of("004", "005","005","005","006", "006");
+      var orderRequest = OrderCreateRequest.builder().productNumbers(productNumbers).build();
+
+      // when
+      orderService.createOrder(orderRequest);
+
+      // then
+      assertThat(cafeMocha.getStock()).isNull();
+      assertThat(grapefruitSmoothie.getStock().getQuantity()).isEqualTo(7);
+      assertThat(bread.getStock().getQuantity()).isEqualTo(8);
     }
 }
