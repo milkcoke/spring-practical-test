@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -36,6 +35,10 @@ public class Order extends BaseEntity {
         for (var orderProduct  : orderProducts) {
             orderProduct.updateOrder(this);
         }
+    }
+
+    public void updateOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
     private static int calculateTotalPrice(List<OrderProduct> orderProducts) {
