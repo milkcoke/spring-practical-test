@@ -5,7 +5,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
@@ -47,7 +46,6 @@ class ProductRepositoryTest {
             .name("소보로빵")
             .price(1500)
             .build();
-
 
     @Test
     @DisplayName("판매중, 판매 보류 상품만 조회한다.")
@@ -97,5 +95,25 @@ class ProductRepositoryTest {
                         tuple("카페라떼", 4500),
                         tuple("소보로빵", 1500)
                 );
+    }
+
+    @Test
+    @DisplayName("가장 마지막 상품의 번호를 조회해온다.")
+    void findLatestProduct() {
+        // given
+        productRepository.saveAll(List.of(americano, cafeLatte, pineappleBread));
+        // when
+        var lastProductNumber = productRepository.findLatestProductNumber();
+        // then
+        assertThat(lastProductNumber).isEqualTo("003");
+    }
+
+    @Test
+    @DisplayName("가장 마지막 상품 번호 조회시 아무 상품이 없으면 null 을 반환한다.")
+    void findLatestNotExistProduct() {
+        // given // when
+        var lastProductNumber = productRepository.findLatestProductNumber();
+        // then
+        assertThat(lastProductNumber).isNull();
     }
 }
