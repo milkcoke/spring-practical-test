@@ -17,6 +17,8 @@ public class Product extends BaseEntity {
     private Long id;
     private String name;
     private int price;
+
+    @Column(unique = true, nullable = false)
     private String productNumber;
 
     @Enumerated(EnumType.STRING)
@@ -28,7 +30,11 @@ public class Product extends BaseEntity {
     //TODO: java: cannot find symbol issue 해결
 //    @Builder.Default
     @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
-    @JoinColumn(name = "stock_id", referencedColumnName = "id")
+    @JoinColumn(
+        name = "stock_id", referencedColumnName = "id",
+        unique = true,
+        foreignKey = @ForeignKey(name = "product_stock_fk")
+    )
     private Stock stock = null;
 
     @Builder
