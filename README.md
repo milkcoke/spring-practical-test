@@ -96,6 +96,57 @@ Behavior Driven Development
 #### How to?
 - Given - When - Then == Arrange - Act - Assert
 
+## CQRS
+**커맨드용 서비스(Create Update Delete)와 쿼리(Read) 서비스를 분리하는 설계**
+
+#### When to use?
+Single Point of Failure 문제 해결
+
+#### Why to use?
+> 장애 격리
+
+CQRS 없이 통합서비스 사용시 커맨드 장애가 쿼리 장애로 이어지고 읽기 장애도 마찬가지로 커맨드 서비스 장애로 이어진다.
+대부분의 DB는 Write Only (Master) 와 Read Only (Slave)로 Endpoint 를 나눠서 접근할 수 있는데
+CQRS 는 DB와 서비스를 분리시킬 수 있는 장점이 있다.
+
+#### How to use
+DB Endpoint 를 분리하여 서비스에 할당한다.
+
+(1) 통합 서비스 사용시 `@Transactional(readOnly = true)` 클래스에 설정
+Spring + Layered Architecture 프로젝트에선 Service 최상단에 @Transactional(readOnly = true) 를 설정해놓고
+Command 가 필요한 메소드에만 `@Transactional` 어노테이션을 붙이는 방식을 채택한다.
+
+```java
+@Service
+@Transactional(readOnly = true)
+public class ProductService {
+  // Query
+  public List<ProductResponse> getSellingProducts() {}
+
+  // Command
+  @Transactional
+  public ProductResponse createProduct(ProductCreateRequest request) {}
+}
+```
+(2) 커맨드 서비스 / 쿼리형 서비스 분리
+커맨드 서비스에는 `@Transactional`, 쿼리형(읽기) 서비스에는 `@Transactional(readOnly = true)` 를 붙인다. 
+
+```java
+@Service
+public class ProductCommandService {
+  // Command
+  public ProductResponse createProduct(ProductCreateRequest request) {}
+}
+```
+
+```java
+@Service
+public class ProductQueryService {
+  // Query
+  public List<ProductResponse> getSellingProducts() {}
+}
+```
+
 # Spring Container
 ## Tomcat Servlet Container
 ![Servlet Container](src/main/resources/assets/SpringBoot_Tomcat_ReqRes.png)
