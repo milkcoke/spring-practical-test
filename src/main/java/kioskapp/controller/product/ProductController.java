@@ -2,9 +2,11 @@ package kioskapp.controller.product;
 
 import kioskapp.domain.product.ProductSellingStatus;
 import kioskapp.service.product.ProductService;
+import kioskapp.service.product.dto.ProductCreateRequest;
 import kioskapp.service.product.dto.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -33,5 +35,10 @@ public class ProductController {
                 return this.productService.getAllProducts();
             }
         }
+    }
+
+    @PostMapping("/api/v1/products")
+    public ProductResponse createProduct(ProductCreateRequest request) {
+        return this.productService.createProduct(request);
     }
 }
