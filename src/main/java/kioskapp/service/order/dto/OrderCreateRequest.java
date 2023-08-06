@@ -1,5 +1,6 @@
 package kioskapp.service.order.dto;
 
+import jakarta.validation.constraints.NotEmpty;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -10,6 +11,7 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderCreateRequest {
     // 오로지 상품 번호로만 주문한다고 가정.
+    @NotEmpty(message = "product number is required")
     private List<String> productNumbers;
 
     @Builder
