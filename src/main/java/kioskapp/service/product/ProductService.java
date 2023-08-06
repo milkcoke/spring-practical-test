@@ -3,7 +3,7 @@ package kioskapp.service.product;
 import kioskapp.domain.product.Product;
 import kioskapp.domain.product.ProductSellingStatus;
 import kioskapp.respository.product.ProductRepository;
-import kioskapp.service.product.dto.ProductCreateRequest;
+import kioskapp.service.product.dto.ProductCreateServiceRequest;
 import kioskapp.service.product.dto.ProductResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -48,7 +48,7 @@ public class ProductService {
     }
 
     @Transactional
-    public ProductResponse createProduct(ProductCreateRequest request) {
+    public ProductResponse createProduct(ProductCreateServiceRequest request) {
         // DB 에서 마지막 저장된 Product 의 상품 번호를 읽어서 + 1하려고 한다.
         // ex) 001 -> 002 , 009 -> 010
 

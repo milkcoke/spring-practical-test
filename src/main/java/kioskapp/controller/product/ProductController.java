@@ -2,11 +2,12 @@ package kioskapp.controller.product;
 
 import jakarta.validation.Valid;
 import kioskapp.common.ApiResponse;
+import kioskapp.controller.product.dto.ProductCreateRequest;
 import kioskapp.domain.product.ProductSellingStatus;
 import kioskapp.service.product.ProductService;
-import kioskapp.service.product.dto.ProductCreateRequest;
 import kioskapp.service.product.dto.ProductResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -37,8 +38,8 @@ public class ProductController {
     }
 
     @PostMapping("/api/v1/products")
-//    @ResponseStatus(HttpStatus.CREATED)
+    @ResponseStatus(HttpStatus.CREATED)
     public ApiResponse<ProductResponse> postProduct(@Valid @RequestBody ProductCreateRequest request) {
-        return ApiResponse.created(productService.createProduct(request));
+        return ApiResponse.created(productService.createProduct(request.toServiceRequest()));
     }
 }

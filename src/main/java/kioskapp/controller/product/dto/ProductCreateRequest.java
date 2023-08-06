@@ -1,11 +1,11 @@
-package kioskapp.service.product.dto;
+package kioskapp.controller.product.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.PositiveOrZero;
-import kioskapp.domain.product.Product;
 import kioskapp.domain.product.ProductSellingStatus;
 import kioskapp.domain.product.ProductType;
+import kioskapp.service.product.dto.ProductCreateServiceRequest;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -38,13 +38,12 @@ public class ProductCreateRequest {
     this.price = price;
   }
 
-  public Product toEntity(String nextProductNumber) {
-    return Product.builder()
-        .name(this.getName())
-        .type(this.getType())
-        .productNumber(nextProductNumber)
-        .sellingStatus(this.getSellingStatus())
-        .price(this.getPrice())
+  public ProductCreateServiceRequest toServiceRequest() {
+    return ProductCreateServiceRequest.builder()
+        .type(this.type)
+        .sellingStatus(this.sellingStatus)
+        .name(this.name)
+        .price(this.price)
         .build();
   }
 }

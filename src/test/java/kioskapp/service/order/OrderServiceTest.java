@@ -7,7 +7,7 @@ import kioskapp.respository.order.OrderRepository;
 import kioskapp.respository.orderproduct.OrderProductRepository;
 import kioskapp.respository.product.ProductRepository;
 import kioskapp.respository.stock.StockRepository;
-import kioskapp.service.order.dto.OrderCreateRequest;
+import kioskapp.controller.order.dto.OrderCreateRequest;
 import kioskapp.service.order.dto.OrderCreateResponse;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
@@ -61,7 +61,7 @@ class OrderServiceTest {
               .build();
 
       // when
-      OrderCreateResponse orderCreateResponse = orderService.createOrder(orderCreateRequest);
+      OrderCreateResponse orderCreateResponse = orderService.createOrder(orderCreateRequest.toServiceRequest());
 
       // then
       assertThat(orderCreateResponse.getId()).isNotNull();
@@ -84,7 +84,7 @@ class OrderServiceTest {
                 .build();
 
       // when
-      OrderCreateResponse orderCreateResponse = orderService.createOrder(orderRequest);
+      OrderCreateResponse orderCreateResponse = orderService.createOrder(orderRequest.toServiceRequest());
       // then
       assertThat(orderCreateResponse.getProductResponses()).hasSize(2)
               .extracting("name", "price")
@@ -120,7 +120,7 @@ class OrderServiceTest {
         var orderRequest = OrderCreateRequest.builder().productNumbers(productNumbers).build();
 
         // when
-        orderService.createOrder(orderRequest);
+        orderService.createOrder(orderRequest.toServiceRequest());
 
         // then
         var updateCafeMocha = productRepository.findById(cafeMocha.getId());
@@ -141,7 +141,7 @@ class OrderServiceTest {
         var orderRequest = OrderCreateRequest.builder().productNumbers(productNumbers).build();
 
         // when // then
-        assertThatThrownBy(() -> orderService.createOrder(orderRequest))
+        assertThatThrownBy(() -> orderService.createOrder(orderRequest.toServiceRequest()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessage("재고가 부족한 상품을 주문했습니다.");
     }
@@ -156,7 +156,7 @@ class OrderServiceTest {
       var orderRequest = OrderCreateRequest.builder().productNumbers(productNumbers).build();
 
       // when // then
-      assertThatThrownBy(() -> orderService.createOrder(orderRequest))
+      assertThatThrownBy(() -> orderService.createOrder(orderRequest.toServiceRequest()))
           .isInstanceOf(IllegalArgumentException.class)
           .hasMessage("재고가 부족한 상품을 주문했습니다.");
     }

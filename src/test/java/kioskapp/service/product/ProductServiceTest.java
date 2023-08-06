@@ -5,7 +5,7 @@ import kioskapp.domain.product.ProductSellingStatus;
 import kioskapp.domain.product.ProductType;
 import kioskapp.domain.stock.Stock;
 import kioskapp.respository.product.ProductRepository;
-import kioskapp.service.product.dto.ProductCreateRequest;
+import kioskapp.controller.product.dto.ProductCreateRequest;
 import kioskapp.service.product.dto.ProductResponse;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.DisplayName;
@@ -52,7 +52,7 @@ class ProductServiceTest {
         .build();
 
     // when
-    ProductResponse appleCreateResponse = productService.createProduct(appleCreateRequest);
+    ProductResponse appleCreateResponse = productService.createProduct(appleCreateRequest.toServiceRequest());
 
     // then
     assertThat(appleCreateResponse)
@@ -81,7 +81,7 @@ class ProductServiceTest {
         .build();
 
     // when
-    ProductResponse pearCreateResponse = productService.createProduct(pearCreateRequest);
+    ProductResponse pearCreateResponse = productService.createProduct(pearCreateRequest.toServiceRequest());
 
     // then
     assertThat(pearCreateResponse)

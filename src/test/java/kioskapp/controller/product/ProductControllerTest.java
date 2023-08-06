@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import kioskapp.domain.product.ProductSellingStatus;
 import kioskapp.domain.product.ProductType;
 import kioskapp.service.product.ProductService;
-import kioskapp.service.product.dto.ProductCreateRequest;
+import kioskapp.controller.product.dto.ProductCreateRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

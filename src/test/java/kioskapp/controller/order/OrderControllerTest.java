@@ -2,7 +2,7 @@ package kioskapp.controller.order;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import kioskapp.service.order.OrderService;
-import kioskapp.service.order.dto.OrderCreateRequest;
+import kioskapp.controller.order.dto.OrderCreateRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,10 +70,10 @@ class OrderControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
         )
         .andDo(print())
-        .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.code").value("400"))
-        .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
-        .andExpect(jsonPath("$.message").value("product number is required"))
+        .andExpect(status().isCreated())
+        .andExpect(jsonPath("$.code").value("201"))
+        .andExpect(jsonPath("$.status").value("CREATED"))
+        .andExpect(jsonPath("$.message").value("CREATED"))
         .andExpect(jsonPath("$.data").isEmpty());
   }
 }

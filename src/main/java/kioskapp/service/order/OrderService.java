@@ -8,8 +8,8 @@ import kioskapp.domain.product.ProductType;
 import kioskapp.respository.order.OrderRepository;
 import kioskapp.respository.orderproduct.OrderProductRepository;
 import kioskapp.respository.product.ProductRepository;
-import kioskapp.service.order.dto.OrderCreateRequest;
 import kioskapp.service.order.dto.OrderCreateResponse;
+import kioskapp.service.order.dto.OrderCreateServiceRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +26,7 @@ public class OrderService {
     private final OrderProductRepository orderProductRepository;
     private final OrderRepository orderRepository;
 
-    public OrderCreateResponse createOrder(OrderCreateRequest orderCreateRequest) {
+    public OrderCreateResponse createOrder(OrderCreateServiceRequest orderCreateRequest) {
         List<String> productNumbers = orderCreateRequest.getProductNumbers();
         List<Product> uniqueProducts = this.productRepository.findAllByProductNumberIn(productNumbers);
         List<Product> allProducts = getAllProductByProductNumbers(uniqueProducts, productNumbers);
