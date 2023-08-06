@@ -1,14 +1,13 @@
 package kioskapp.controller.product;
 
+import jakarta.validation.Valid;
+import kioskapp.common.ApiResponse;
 import kioskapp.domain.product.ProductSellingStatus;
 import kioskapp.service.product.ProductService;
 import kioskapp.service.product.dto.ProductCreateRequest;
 import kioskapp.service.product.dto.ProductResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -18,27 +17,28 @@ public class ProductController {
     private final ProductService productService;
 
     @GetMapping("/api/v1/products")
-    public List<ProductResponse> getProducts(@RequestParam(required = false) ProductSellingStatus sellingStatus) {
+    public ApiResponse<List<ProductResponse>> getProducts(@RequestParam(required = false) ProductSellingStatus sellingStatus) {
 
         if (sellingStatus == null) {
-            return this.productService.getAllProducts();
+            return ApiResponse.ok(productService.getAllProducts());
         }
 
         switch (sellingStatus) {
             case SELLING, HOLD -> {
-                return this.productService.getSellingProducts();
+                return ApiResponse.ok(productService.getSellingProducts());
             }
             case STOP -> {
-                return this.productService.getNotSellingProducts();
+                return ApiResponse.ok(productService.getNotSellingProducts());
             }
             default -> {
-                return this.productService.getAllProducts();
+                return ApiResponse.ok(productService.getAllProducts());
             }
         }
     }
 
     @PostMapping("/api/v1/products")
-    public ProductResponse createProduct(ProductCreateRequest request) {
-        return this.productService.createProduct(request);
+//    @ResponseStatus(HttpStatus.CREATED)
+    public ApiResponse<ProductResponse> postProduct(@Valid @RequestBody ProductCreateRequest request) {
+        return ApiResponse.created(productService.createProduct(request));
     }
 }
