@@ -12,6 +12,7 @@ import kioskapp.service.order.dto.OrderCreateResponse;
 import kioskapp.service.order.dto.OrderCreateServiceRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashSet;
 import java.util.List;
@@ -21,11 +22,13 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class OrderService {
     private final ProductRepository productRepository;
     private final OrderProductRepository orderProductRepository;
     private final OrderRepository orderRepository;
 
+    @Transactional
     public OrderCreateResponse createOrder(OrderCreateServiceRequest orderCreateRequest) {
         List<String> productNumbers = orderCreateRequest.getProductNumbers();
         List<Product> uniqueProducts = this.productRepository.findAllByProductNumberIn(productNumbers);
@@ -35,7 +38,8 @@ public class OrderService {
                 .map(OrderProduct::new)
                 .toList();
 
-        Order order = new Order(orderProducts);
+        Order order = new Order();
+        orderProducts.forEach(orderProduct -> orderProduct.updateOrder(order));
 
         // (1) 재고관리 대상 상품ID : 현재 주문량 map 생성
         List<Product> productsHavingStockList = getProductsHavingStock(allProducts);
