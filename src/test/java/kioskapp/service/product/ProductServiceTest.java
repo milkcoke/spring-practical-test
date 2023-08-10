@@ -66,12 +66,12 @@ class ProductServiceTest {
     // given
     productRepository.save(appleBottle);
     Product pear = Product.builder()
-                                          .name("갈아만든 배")
-                                          .type(ProductType.BOTTLE)
-                                          .price(2500)
-                                          .sellingStatus(ProductSellingStatus.SELLING)
-                                          .stock(new Stock(5))
-                                          .build();
+                          .name("갈아만든 배")
+                          .type(ProductType.BOTTLE)
+                          .price(2500)
+                          .sellingStatus(ProductSellingStatus.SELLING)
+                          .stock(new Stock(5))
+                          .build();
 
     ProductCreateRequest pearCreateRequest = ProductCreateRequest.builder()
         .name(pear.getName())
