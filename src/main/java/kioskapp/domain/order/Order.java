@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor(access = AccessLevel.PUBLIC)
 @Entity
 @Table(name = "orders")
 public class Order extends BaseEntity {
@@ -21,28 +21,21 @@ public class Order extends BaseEntity {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    private OrderStatus orderStatus;
+    private OrderStatus orderStatus = OrderStatus.INIT;
 
-    private int totalPrice;
+    private int totalPrice = 0;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)
     private List<OrderProduct> orderProducts = new ArrayList<>();
-
-    public Order(List<OrderProduct> orderProducts) {
-        this.orderStatus = OrderStatus.INIT;
-        this.totalPrice = calculateTotalPrice(orderProducts);
-        this.orderProducts = orderProducts;
-        for (var orderProduct  : orderProducts) {
-            orderProduct.updateOrder(this);
-        }
-    }
 
     public void updateOrderStatus(OrderStatus orderStatus) {
         this.orderStatus = orderStatus;
     }
 
-    private static int calculateTotalPrice(List<OrderProduct> orderProducts) {
-        return orderProducts.stream()
+    @PrePersist
+    @PreUpdate
+    private void calculateTotalPrice() {
+        this.totalPrice = this.orderProducts.stream()
                 .map(OrderProduct::getProduct)
                 .mapToInt(Product::getPrice)
                 .sum();

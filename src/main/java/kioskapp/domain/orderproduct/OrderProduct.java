@@ -32,6 +32,10 @@ public class OrderProduct extends BaseEntity {
     }
 
     public void updateOrder(Order order) {
-        this.order = order;
+      if (this.order != null) {
+        this.order.getOrderProducts().remove(this);
+      }
+      this.order = order;
+      order.getOrderProducts().add(this);
     }
 }
