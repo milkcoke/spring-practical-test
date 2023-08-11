@@ -13,6 +13,8 @@ import kioskapp.respository.orderproduct.OrderProductRepository;
 import kioskapp.respository.product.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
@@ -22,6 +24,7 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest
+@ExtendWith(MockitoExtension.class)
 class OrderStatisticsServiceTest {
 
   @Autowired
@@ -30,7 +33,6 @@ class OrderStatisticsServiceTest {
   @Autowired
   private ProductRepository productRepository;
 
-  @Autowired
   private OrderProductRepository orderProductRepository;
 
   @Autowired
@@ -80,7 +82,6 @@ class OrderStatisticsServiceTest {
 
     // when
     orderStatisticsService.sendDayTotalSalesToMail(LocalDate.now(), "test@test.com");
-
 
     // then
     List<MailSendHistory> sendHistories = mailSendHistoryRepository.findAll();
