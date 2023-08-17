@@ -37,7 +37,7 @@ class CafeKioskTest {
 
     @Test
     @DisplayName("fail - 아메리카노 0잔 이하 추가 주문 불가능")
-    void failedToAddServeralBeverages() {
+    void failedToAddSeveralBeverages() {
         var cafeKiosk = new CafeKiosk();
         assertThatThrownBy(() -> cafeKiosk.add(new Americano(), 0))
                 .isInstanceOf(IllegalArgumentException.class)
