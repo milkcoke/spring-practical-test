@@ -148,6 +148,53 @@ deleteAll 은 이런 문제를 해결하지만, 연산 비용이 매우 비싸�
 
 > This doesn't consider referential constraint.
 
+### 공유 리소스로 단계별 테스트를 한다면 DynamicTest 를 활용하라.
+
+일반적인 테스트에서 given when then 을 작성하면 \
+어느 부분에서 시나리오를 끊어서 해석해야할지 알기 어렵다. \
+DynamicTest 는 단계별 시나리오를 나눠 공통의 리소스에 대해 테스트하기 용이하고 가독성도 높인다.
+
+#### StockTest.java
+
+```java
+class StockTest{
+    @DisplayName("재고 차감 시나리오")
+    @TestFactory
+    Collection<DynamicTest> deductQuantityNotEnoughStock() {
+        // Shared resource
+        Stock stock = new Stock(1);
+
+        return List.of(
+            dynamicTest("재고 개수만큼 수량 차감 가능", ()->{
+                // given
+                int quantity = 1;
+
+                // when
+                stock.deductQuantity(quantity);
+
+                //then
+                assertThat(stock.getQuantity()).isZero();
+            }),
+
+            dynamicTest("재고가 부족한 경우 재고 차감 불가능", ()->{
+                // given
+                int quantity = 1;
+                
+                // when // then
+                assertThatThrownBy(()->stock.deductQuantity(quantity))
+                    .isInstanceOf(IllegalArgumentException.class)
+                    .hasMessage("재고가 부족합니다.");
+            })
+        );
+    }
+}
+```
+
+#### Result
+공통의 시나리오를 `@DisplayName`로 묶고 하위 단계에 이름을 붙여 가독성을 높인다.
+![DynamicTest-Result.png](src/main/resources/assets/dynamic_test_example.png)
+
+
 ---
 
 ## BDD
