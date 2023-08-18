@@ -2,8 +2,11 @@ package kioskapp.domain.product;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+import static org.junit.jupiter.params.ParameterizedTest.ARGUMENTS_WITH_NAMES_PLACEHOLDER;
 
 class ProductTypeTest {
 
@@ -40,4 +43,14 @@ class ProductTypeTest {
         assertThat(result).isTrue();
     }
 
+    @ParameterizedTest(name = ARGUMENTS_WITH_NAMES_PLACEHOLDER)
+    @DisplayName("상품 종류별 재고 관리 여부")
+    @CsvSource({"HANDMADE, false", "BOTTLE, true", "BAKERY, true" })
+    void containStockTypes(ProductType productType, boolean expected) {
+        // when
+        var result = ProductType.hasStock(productType);
+
+        // then
+        assertThat(result).isEqualTo(expected);
+    }
 }
