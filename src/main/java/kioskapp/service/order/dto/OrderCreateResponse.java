@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 public class OrderCreateResponse {
     private Long id;
 
-    private int totalPrice;
+    private final int totalPrice;
 
-    private LocalDateTime registeredDateTime;
+    private final LocalDateTime registeredDateTime;
 
     @Builder.Default
     private List<ProductResponse> productResponses = new ArrayList<>();

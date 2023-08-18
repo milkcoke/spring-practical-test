@@ -1,15 +1,11 @@
 package kioskapp.controller.order;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import kioskapp.service.order.OrderService;
+import kioskapp.ControllerTestSupport;
 import kioskapp.controller.order.dto.OrderCreateRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.util.List;
@@ -19,16 +15,9 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(controllers = OrderController.class)
-class OrderControllerTest {
+class OrderControllerTest extends ControllerTestSupport {
 
-  @Autowired
-  private MockMvc mockMvc;
 
-  @Autowired
-  private ObjectMapper objectMapper;
-
-  @MockBean
-  private OrderService orderService;
 
   @Test
   @DisplayName("상품 번호 누락시 주문에 실패한다.")

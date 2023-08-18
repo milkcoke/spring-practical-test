@@ -1,11 +1,10 @@
 package kioskapp.respository.product;
 
+import kioskapp.RepositoryTestSupport;
 import kioskapp.domain.product.Product;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.ActiveProfiles;
 
 import java.util.List;
 
@@ -14,12 +13,7 @@ import static kioskapp.domain.product.ProductType.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.tuple;
 
-@ActiveProfiles("test")
-//@SpringBootTest // Scan all components
-// Transactional 에 의해 자동 Rollback
-// Repository 관련 Components 만 load
-@DataJpaTest
-class ProductRepositoryTest {
+class ProductRepositoryTest extends RepositoryTestSupport {
     @Autowired
     private ProductRepository productRepository;
 

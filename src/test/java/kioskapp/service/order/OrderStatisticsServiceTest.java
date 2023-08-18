@@ -1,5 +1,6 @@
 package kioskapp.service.order;
 
+import kioskapp.IntegrationTestSupport;
 import kioskapp.domain.history.mail.MailSendHistory;
 import kioskapp.domain.order.Order;
 import kioskapp.domain.order.OrderStatus;
@@ -9,31 +10,23 @@ import kioskapp.domain.product.ProductType;
 import kioskapp.domain.stock.Stock;
 import kioskapp.respository.history.mail.MailSendHistoryRepository;
 import kioskapp.respository.order.OrderRepository;
-import kioskapp.respository.orderproduct.OrderProductRepository;
 import kioskapp.respository.product.ProductRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import java.time.LocalDate;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
-@SpringBootTest
-@ExtendWith(MockitoExtension.class)
-class OrderStatisticsServiceTest {
+class OrderStatisticsServiceTest extends IntegrationTestSupport {
 
   @Autowired
   private OrderStatisticsService orderStatisticsService;
 
   @Autowired
   private ProductRepository productRepository;
-
-  private OrderProductRepository orderProductRepository;
 
   @Autowired
   private OrderRepository orderRepository;

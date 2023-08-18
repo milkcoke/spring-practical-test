@@ -1,5 +1,6 @@
 package kioskapp.service.order;
 
+import kioskapp.IntegrationTestSupport;
 import kioskapp.domain.product.Product;
 import kioskapp.domain.product.ProductType;
 import kioskapp.domain.stock.Stock;
@@ -25,10 +26,8 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.assertj.core.groups.Tuple.tuple;
 
-@ActiveProfiles("test")
-@SpringBootTest
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-class OrderServiceTest {
+class OrderServiceTest extends IntegrationTestSupport {
   @Autowired
   private OrderService orderService;
   @Autowired
