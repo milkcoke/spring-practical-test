@@ -130,6 +130,24 @@ BeforeEach 에 두면 테스트 클래스가 커질 수록 `given` 절 조건을
 프로젝트 규모가 커질 수록 sql 문이 가파르게 증가하고 데이터 변화에 따라 sql 문 변경도 잦아져 관리 소요가 늘어난다. \
 또, `given` 절에 올 데이터를 일일히 sql 문을 확인해야 한다.
 
+### 9. Use `deleteAllInBatch`, Don't `deleteAll`
+테스트 케이스마다 테이블 cleans 시 외래키 참조 제약조건 때문에 막힐 수 있다.
+deleteAll 은 이런 문제를 해결하지만, 연산 비용이 매우 비싸다.
+따라서 테이블 관계를 고려하여 삭제 순서를 결정하고, deleteAllInBatch 를 쓰는게 더 낫다.
+
+#### deleteAllI
+1. SELECT * FROM table
+2. Delete each row from the table with `WHERE` condition
+=> **Queries are to be executed the number of rows.**
+=> Cost is expensive
+
+> 대신, Delete 할 때 부모-자식간 외래키 참조 관계도 함께 지워준다.
+
+#### deleteAllInBatch
+1. TRUNCATE the table at once
+
+> This doesn't consider referential constraint.
+
 ---
 
 ## BDD
