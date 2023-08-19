@@ -1,0 +1,13 @@
+[[Product-POST]]
+=== Product POST
+
+==== HTTP Request
+include::{snippets}/product-post/http-request.adoc[]
+
+include::{snippets}/product-post/request-fields.adoc[]
+
+==== HTTP Response
+include::{snippets}/product-post/http-response.adoc[]
+
+include::{snippets}/product-post/response-fields.adoc[]
+

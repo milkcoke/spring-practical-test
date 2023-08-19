@@ -1,0 +1,11 @@
+[[Product-GET]]
+=== Product GET
+
+==== HTTP Request
+include::{snippets}/product-readAll/http-request.adoc[]
+
+==== HTTP Response
+include::{snippets}/product-readAll/http-response.adoc[]
+
+include::{snippets}/product-readAll/response-fields.adoc[]
+
