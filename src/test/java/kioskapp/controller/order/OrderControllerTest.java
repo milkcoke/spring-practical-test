@@ -14,10 +14,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@WebMvcTest(controllers = OrderController.class)
 class OrderControllerTest extends ControllerTestSupport {
-
-
 
   @Test
   @DisplayName("상품 번호 누락시 주문에 실패한다.")

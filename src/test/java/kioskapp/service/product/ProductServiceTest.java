@@ -4,17 +4,11 @@ import kioskapp.IntegrationTestSupport;
 import kioskapp.domain.product.Product;
 import kioskapp.domain.product.ProductSellingStatus;
 import kioskapp.domain.product.ProductType;
-import kioskapp.domain.stock.Stock;
-import kioskapp.respository.orderproduct.OrderProductRepository;
 import kioskapp.respository.product.ProductRepository;
 import kioskapp.controller.product.dto.ProductCreateRequest;
 import kioskapp.service.product.dto.ProductResponse;
-import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.event.annotation.BeforeTestMethod;
 
 import java.util.Collection;
 import java.util.List;
@@ -22,12 +16,18 @@ import java.util.List;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.groups.Tuple.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class ProductServiceTest extends IntegrationTestSupport {
 
   @Autowired
   private ProductService productService;
   @Autowired
   private ProductRepository productRepository;
+
+  @AfterAll
+  void tearDown() {
+    productRepository.deleteAllInBatch();
+  }
 
   @DisplayName("상품 등록 시나리오")
   @TestFactory

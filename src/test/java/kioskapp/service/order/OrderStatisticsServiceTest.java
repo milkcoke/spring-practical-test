@@ -10,9 +10,12 @@ import kioskapp.domain.product.ProductType;
 import kioskapp.domain.stock.Stock;
 import kioskapp.respository.history.mail.MailSendHistoryRepository;
 import kioskapp.respository.order.OrderRepository;
+import kioskapp.respository.orderproduct.OrderProductRepository;
 import kioskapp.respository.product.ProductRepository;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestInstance;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDate;
@@ -20,6 +23,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 class OrderStatisticsServiceTest extends IntegrationTestSupport {
 
   @Autowired
@@ -29,10 +33,21 @@ class OrderStatisticsServiceTest extends IntegrationTestSupport {
   private ProductRepository productRepository;
 
   @Autowired
+  private OrderProductRepository orderProductRepository;
+
+  @Autowired
   private OrderRepository orderRepository;
 
   @Autowired
   private MailSendHistoryRepository mailSendHistoryRepository;
+
+  @AfterAll
+  void tearDown() {
+    orderProductRepository.deleteAllInBatch();
+    productRepository.deleteAllInBatch();
+    orderProductRepository.deleteAllInBatch();
+    mailSendHistoryRepository.deleteAllInBatch();
+  }
 
   @Test
   @DisplayName("결제 완료 주문의 일일 매출 통계 메일을 전송한다.")
