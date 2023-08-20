@@ -207,14 +207,159 @@ A. 별도의 클래스를 만들어야 할 때가 아닌지 자문해봐야한�
 예를 들면 @NoArgsConstructor, @Getter, @Builder 와 같은 것들로 범용성있고 다른 테스트에도 유용하게 쓰일 메소드들이다. \
 그래도 무분별한 사용은 지양하라.
 
-### 13. Spring REST Docs
+---
+
+## Spring REST Docs 활용
 테스트 코드를 통한 API 문서 자동화 도구로 Swagger 와 자주 비교된다.
 
+### RESTDocs vs Swagger
 |Index|REST Docs| Swagger                                            |
 |------|------------|----------------------------------------------------|
 |Pros|- 높은 신뢰도 <br>테스트를 통과해야만 문서가 만들어진다. <br>- 프로덕션 코드에 영향을 미치지 않음| - 적용이 쉬움 <br>- 문서에서 바로 API 호출이 가능함                 |
 |Cons|- 설정이 어려운편 <br>- 문서를 위해 반드시 테스트를 작성해야 한다는 제약 <br>- 많은 코드량| - 프로덕션 코드에 침투적 <br>- 상대적으로 낮은 신뢰도 <br>(테스트코드 제약 X) |
 
+
+### 설정 방법
+#### (1) build.gradle 의존성 추가
+
+#### (2) RestDocsSupport class 작성
+MockMVC, 직렬화를 위한 ObjectMapper 는 거의 필수
+```java
+@ExtendWith(RestDocumentationExtension.class)
+public abstract class RestDocsSupport {
+
+  protected MockMvc mockMvc;
+
+  protected ObjectMapper objectMapper = new ObjectMapper();
+
+  @BeforeEach
+  void setUp(RestDocumentationContextProvider provider) {
+    this.mockMvc = MockMvcBuilders.standaloneSetup(initController())
+        .apply(MockMvcRestDocumentation.documentationConfiguration(provider))
+        .build();
+  }
+
+  protected abstract Object initController();
+}
+```
+
+#### (3) Controller Test 코드 작성
+```java
+public class ProductControllerDocsTest extends RestDocsSupport {
+  private final ProductService productService = mock(ProductService.class);
+
+  @Override
+  protected Object initController() {
+    return new ProductController(productService);
+  }
+
+  @Test
+  @DisplayName("판매 상품 전체를 조회한다.")
+  public void getAllProducts() throws Exception {
+    // given
+
+    // when // then
+    mockMvc.perform(
+            MockMvcRequestBuilders.get("/api/v1/products")
+        )
+        .andDo(print())
+        .andExpect(status().isOk())
+        .andExpect(jsonPath("$.code").value(200))
+        .andExpect(jsonPath("$.status").value("OK"))
+        .andExpect(jsonPath("$.message").value("OK"))
+        .andExpect(jsonPath("$.data").isArray())
+        .andDo(document("product-readAll",
+            preprocessResponse(prettyPrint()),
+            responseFields(
+                fieldWithPath("code").type(JsonFieldType.NUMBER)
+                    .description("HTTP 응답 코드"),
+                fieldWithPath("status").type(JsonFieldType.STRING)
+                    .description("응답 코드"),
+                fieldWithPath("message").type(JsonFieldType.STRING)
+                    .description("응답 메시지"),
+                fieldWithPath("data").type(JsonFieldType.ARRAY)
+                    .description("응답 데이터")
+            )
+        ));
+  }
+}
+```
+
+#### (4) snippet 템플릿 작성
+
+`test/resources/org.springframework.restdos.templates` 참조
+```snippet
+==== Request Fields
+|===
+|Path|Type|Required|Description
+
+{{#fields}}
+
+|{{#tableCellContent}}`+{{path}}+`{{/tableCellContent}}
+|{{#tableCellContent}}`+{{type}}+`{{/tableCellContent}}
+|{{#tableCellContent}}{{^optional}}✅{{/optional}}{{/tableCellContent}}
+|{{#tableCellContent}}{{description}}{{/tableCellContent}}
+
+{{/fields}}
+
+|===
+```
+
+#### (5) build
+Gradle > Tasks > build
+Gradle > Tasks > documentation > asciidoctor
+
+실행시 build/${outDir} 에 `.adoc` 파일들이 생성된다.
+
+#### (6) src/docs 디렉토리에 .adoc 파일 작성
+![Define adoc](src/test/resources/assets/Define-adoc.png)
+
+index.adoc 파일과 디렉토리
+```adoc
+ifndef::snippets[]
+:snippets: ../../build/generated-snippets
+endif::[]
+= CafeKiosk REST API 문서
+:doctype: book
+:icons: font
+:source-highlighter: highlightjs
+:toc: left
+:toclevels: 3
+:sectlinks:
+
+[[Product-API]]
+== Product API
+
+include::product/product-getall.adoc[]
+
+include::product/product-post.adoc[]
+```
+
+#### (7) jar 파일 실행 및 접속
+```bash
+$ java --jar build/libs/${Project-Name}.jar
+# ${IP}:${PORT}/docs/index.html 접속
+```
+
+### 결과 예시
+![RestDocs example](src/test/resources/assets/RESTDocs_Example.png)
+
+### 언제 RESTDocs 를 쓸까?
+- FrontEnd 개발자들에게 빠르게 API 명세서를 줘야할 때
+- Mock 을 빠르게 구성하는것이 가능할 때 (Test 코드 필수)
+- Docs 에서 코드 실행이 필요하지 않을 때
+
+솔직히 내 입장에서는 UI, mock 데이터 및 test 코드 강제부터 별로 맘에 들지 않는다.
+이럴 바엔 Swagger 쓰는게 낫지 않나 싶다.
+하던 찰나에 둘을 조합해서 쓰는 방법을 소개한 [블로그](https://jwkim96.tistory.com/274)를 찾았다.
+
+### REST Docs + Swagger 조합 사용
+REST Docs 결과물로 OAI 3.0 스팩을 출력하고 OAI 3.0 기반으로 .html 페이지 생성
+=> REST Docs 의 높은 신뢰성 + Swagger 의 웹 테스트와 멋진 UI 동시 사용
+
+여전히 REST Docs 설정이 귀찮긴 하지만 초기에 한번만 고생하면 되니까 이정도는 괜찮다.
+
+- [참조 블로그](https://jwkim96.tistory.com/274) 
 
 ---
 ## BDD
