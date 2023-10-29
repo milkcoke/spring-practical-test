@@ -1,0 +1,24 @@
+spring:
+  config:
+    activate:
+      on-profile: local
+
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    # Hibernate 초기화 후 data.sql 실행
+    # 개발용
+    defer-datasource-initialization: true
+
+  sql:
+    init:
+      mode: always
+
+  #H2 console 접근 허용
+  h2:
+    console:
+      enabled: true
