@@ -10,9 +10,14 @@ version = '0.0.1-SNAPSHOT'
 
 java {
     toolchain {
+        // Minimum version of JDK used to compile
+        // This is used really at the compile time.
         languageVersion = JavaLanguageVersion.of(20)
     }
+    // Minimum java code version supported
+    // This is not really related to which jdk (compiler) should be used in compile time
     sourceCompatibility = JavaVersion.VERSION_20
+    // Minimum version of Java Runtime version to execute .class (java byte code)
     targetCompatibility = JavaVersion.VERSION_20
 }
 
