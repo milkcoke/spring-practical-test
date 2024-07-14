@@ -15,7 +15,11 @@ public class ApiControllerAdvice {
   @ResponseStatus(HttpStatus.BAD_REQUEST)
   @ExceptionHandler(BindException.class)
   public ApiResponse<Object> bindException(BindException bindException) {
-    var errMessage = bindException.getBindingResult().getAllErrors().get(0).getDefaultMessage();
+    var errMessage = bindException.
+      getBindingResult().
+      getAllErrors().
+      getFirst().
+      getDefaultMessage();
 
     return ApiResponse.of(
         HttpStatus.BAD_REQUEST,
