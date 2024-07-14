@@ -1,7 +1,7 @@
 plugins {
     id 'java'
-    id 'org.springframework.boot' version '3.2.4'
-    id 'io.spring.dependency-management' version '1.1.4'
+    id 'org.springframework.boot' version '3.3.1'
+    id 'io.spring.dependency-management' version '1.1.5'
     id 'org.asciidoctor.jvm.convert' version '4.0.0-alpha.1'
 }
 
@@ -12,13 +12,13 @@ java {
     toolchain {
         // Minimum version of JDK used to compile
         // This is used really at the compile time.
-        languageVersion = JavaLanguageVersion.of(20)
+        languageVersion = JavaLanguageVersion.of(21)
     }
     // Minimum java code version supported
     // This is not really related to which jdk (compiler) should be used in compile time
-    sourceCompatibility = JavaVersion.VERSION_20
+    sourceCompatibility = JavaVersion.VERSION_21
     // Minimum version of Java Runtime version to execute .class (java byte code)
-    targetCompatibility = JavaVersion.VERSION_20
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 configurations {
@@ -38,7 +38,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-    implementation 'com.google.guava:guava:32.1.2-jre'
+    implementation 'com.google.guava:guava:33.2.1-jre'
     implementation 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 
     //test
