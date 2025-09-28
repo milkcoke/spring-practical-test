@@ -6,11 +6,12 @@ import kioskapp.domain.product.ProductType;
 import kioskapp.controller.product.dto.ProductCreateRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.skyscreamer.jsonassert.JSONAssert;
+import org.skyscreamer.jsonassert.JSONCompareMode;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class ProductControllerTest extends ControllerTestSupport {
@@ -21,15 +22,26 @@ class ProductControllerTest extends ControllerTestSupport {
     // given
 
     // when // then
-    mockMvc.perform(
+    String responsePayload = mockMvc.perform(
             MockMvcRequestBuilders.get("/api/v1/products")
         )
         .andDo(print())
         .andExpect(status().isOk())
-        .andExpect(jsonPath("$.code").value(200))
-        .andExpect(jsonPath("$.status").value("OK"))
-        .andExpect(jsonPath("$.message").value("OK"))
-        .andExpect(jsonPath("$.data").isArray());
+        .andReturn()
+        .getResponse()
+        .getContentAsString();
+
+    JSONAssert.assertEquals(
+      responsePayload,
+"""
+        {
+          "code": 200,
+          "status": "OK",
+          "message": "OK",
+          "data": []
+        }
+      """,
+      JSONCompareMode.STRICT);
   }
   @Test
   @DisplayName("첫 신규 상품을 등록한다.")
@@ -44,17 +56,28 @@ class ProductControllerTest extends ControllerTestSupport {
 
     // perform: API Call
     // when // then
-    mockMvc.perform(
+    String responsePayload = mockMvc.perform(
             MockMvcRequestBuilders.post("/api/v1/products")
                 .content(objectMapper.writeValueAsString(postAmericanoReq))
                 .contentType(MediaType.APPLICATION_JSON)
         )
         .andDo(print())
         .andExpect(status().isCreated())
-        .andExpect(jsonPath("$.status").value("CREATED"))
-        .andExpect(jsonPath("$.code").value("201"))
-        .andExpect(jsonPath("$.message").value("CREATED"))
-        .andExpect(jsonPath("$.data").isEmpty());
+      .andReturn()
+      .getResponse()
+      .getContentAsString();
+
+    JSONAssert.assertEquals(
+      responsePayload,
+"""
+      {
+        "code": 201,
+        "status": "CREATED",
+        "message": "CREATED",
+        "data": null
+      }
+      """,
+      JSONCompareMode.STRICT);
   }
 
   @Test
@@ -67,17 +90,29 @@ class ProductControllerTest extends ControllerTestSupport {
         .price(4000)
         .build();
     // when // then
-    mockMvc.perform(
+    String responsePayload = mockMvc.perform(
             MockMvcRequestBuilders.post("/api/v1/products")
                 .content(objectMapper.writeValueAsString(postAmericanoReqWithoutNameReq))
                 .contentType(MediaType.APPLICATION_JSON)
         )
         .andDo(print())
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.code").value("400"))
-        .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
-        .andExpect(jsonPath("$.message").value("product name is required"))
-        .andExpect(jsonPath("$.data").isEmpty());
+        .andReturn()
+        .getResponse()
+        .getContentAsString();
+
+    JSONAssert.assertEquals(
+      responsePayload,
+      """
+        {
+          "code": 400,
+          "status": "BAD_REQUEST",
+          "message": "product name is required",
+          "data": null
+        }
+        """,
+        JSONCompareMode.STRICT
+      );
   }
 
   @Test
@@ -90,17 +125,29 @@ class ProductControllerTest extends ControllerTestSupport {
         .price(4000)
         .build();
     // when // then
-    mockMvc.perform(
+    String responsePayload = mockMvc.perform(
             MockMvcRequestBuilders.post("/api/v1/products")
                 .content(objectMapper.writeValueAsString(postAmericanoReqWithoutNameReq))
                 .contentType(MediaType.APPLICATION_JSON)
         )
         .andDo(print())
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.code").value("400"))
-        .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
-        .andExpect(jsonPath("$.message").value("product type is required"))
-        .andExpect(jsonPath("$.data").isEmpty());
+        .andReturn()
+        .getResponse()
+        .getContentAsString();
+
+    JSONAssert.assertEquals(
+      responsePayload,
+      """
+        {
+          "code": 400,
+          "status": "BAD_REQUEST",
+          "message": "product type is required",
+          "data": null
+        }
+        """,
+      JSONCompareMode.STRICT
+    );
   }
 
 
@@ -115,17 +162,28 @@ class ProductControllerTest extends ControllerTestSupport {
         .build();
 
     // when // then
-    mockMvc.perform(
+    String responsePayload = mockMvc.perform(
         MockMvcRequestBuilders.post("/api/v1/products")
             .content(objectMapper.writeValueAsString(postAmericanoReqWithoutSellingStatus))
             .contentType(MediaType.APPLICATION_JSON)
     )
         .andDo(print())
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.code").value("400"))
-        .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
-        .andExpect(jsonPath("$.message").value("product selling status is required"))
-        .andExpect(jsonPath("$.data").isEmpty());
+        .andReturn()
+        .getResponse()
+        .getContentAsString();
+    JSONAssert.assertEquals(
+      responsePayload,
+      """
+        {
+          "code": 400,
+          "status": "BAD_REQUEST",
+          "message": "product selling status is required",
+          "data": null
+        }
+        """,
+      JSONCompareMode.STRICT
+    );
   }
 
   @Test
@@ -139,16 +197,27 @@ class ProductControllerTest extends ControllerTestSupport {
         .price(-1)
         .build();
     // when // then
-    mockMvc.perform(
+    String responsePayload = mockMvc.perform(
             MockMvcRequestBuilders.post("/api/v1/products")
                 .content(objectMapper.writeValueAsString(postAmericanoWithNegativePriceReq))
                 .contentType(MediaType.APPLICATION_JSON)
         )
         .andDo(print())
         .andExpect(status().isBadRequest())
-        .andExpect(jsonPath("$.code").value("400"))
-        .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
-        .andExpect(jsonPath("$.message").value("price should be greater than or equal to zero"))
-        .andExpect(jsonPath("$.data").isEmpty());
+      .andReturn()
+      .getResponse()
+      .getContentAsString();
+    JSONAssert.assertEquals(
+      responsePayload,
+      """
+      {
+        "code": 400,
+        "status": "BAD_REQUEST",
+        "message": "price should be greater than or equal to zero",
+        "data": null
+      }
+      """,
+      JSONCompareMode.STRICT
+    );
   }
 }
