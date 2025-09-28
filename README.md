@@ -207,16 +207,38 @@ A. 별도의 클래스를 만들어야 할 때가 아닌지 자문해봐야한�
 예를 들면 @NoArgsConstructor, @Getter, @Builder 와 같은 것들로 범용성있고 다른 테스트에도 유용하게 쓰일 메소드들이다. \
 그래도 무분별한 사용은 지양하라.
 
+
+### 13. Layered Architecture 에서 테스트 계층 분리는 어떻게 해야하는가?
+#### Presentation Layer
+Presentation Layer 는 갖고 있는 의존관계가 많다. \
+테스트를 위해 너무 많은 코드가 필요하다. \
+Business, Persistence Layer 를 Mocking 하면 이런 문제를 해결할 수 있다.  \
+Spring MVC 동작을 재현할 수 있는 MockMVC 프레임워크를 활용한다.
+
+```java
+// Controller 관련 Bean 만 등록
+@WebMvcTest(controllers = ProductController.class)
+class ProductControllerTest {
+  @Autowired
+  private MockMvc mockVmc;
+  
+  // Mock 객체를 Bean 에 등록
+  @MockitoBean
+  private ProduceService produceService;
+  
+}
+```
+
 ---
 
 ## Spring REST Docs 활용
 테스트 코드를 통한 API 문서 자동화 도구로 Swagger 와 자주 비교된다.
 
 ### RESTDocs vs Swagger
-|Index|REST Docs| Swagger                                            |
-|------|------------|----------------------------------------------------|
-|Pros|- 높은 신뢰도 <br>테스트를 통과해야만 문서가 만들어진다. <br>- 프로덕션 코드에 영향을 미치지 않음| - 적용이 쉬움 <br>- 문서에서 바로 API 호출이 가능함                 |
-|Cons|- 설정이 어려운편 <br>- 문서를 위해 반드시 테스트를 작성해야 한다는 제약 <br>- 많은 코드량| - 프로덕션 코드에 침투적 <br>- 상대적으로 낮은 신뢰도 <br>(테스트코드 제약 X) |
+| Index | REST Docs                                                    | Swagger                                            |
+|-------|--------------------------------------------------------------|----------------------------------------------------|
+| Pros  | - 높은 신뢰도 <br>테스트를 통과해야만 문서가 만들어진다. <br>- 프로덕션 코드에 영향을 미치지 않음 | - 적용이 쉬움 <br>- 문서에서 바로 API 호출이 가능함                 |
+| Cons  | - 설정이 어려운편 <br>- 문서를 위해 반드시 테스트를 작성해야 한다는 제약 <br>- 많은 코드량    | - 프로덕션 코드에 침투적 <br>- 상대적으로 낮은 신뢰도 <br>(테스트코드 제약 X) |
 
 
 ### 설정 방법
