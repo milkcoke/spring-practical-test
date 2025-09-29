@@ -32,7 +32,6 @@ class ProductControllerTest extends ControllerTestSupport {
         .getContentAsString();
 
     JSONAssert.assertEquals(
-      responsePayload,
 """
         {
           "code": 200,
@@ -41,6 +40,7 @@ class ProductControllerTest extends ControllerTestSupport {
           "data": []
         }
       """,
+      responsePayload,
       JSONCompareMode.STRICT);
   }
   @Test
@@ -68,7 +68,6 @@ class ProductControllerTest extends ControllerTestSupport {
       .getContentAsString();
 
     JSONAssert.assertEquals(
-      responsePayload,
 """
       {
         "code": 201,
@@ -77,6 +76,7 @@ class ProductControllerTest extends ControllerTestSupport {
         "data": null
       }
       """,
+      responsePayload,
       JSONCompareMode.STRICT);
   }
 
@@ -102,7 +102,6 @@ class ProductControllerTest extends ControllerTestSupport {
         .getContentAsString();
 
     JSONAssert.assertEquals(
-      responsePayload,
       """
         {
           "code": 400,
@@ -111,6 +110,7 @@ class ProductControllerTest extends ControllerTestSupport {
           "data": null
         }
         """,
+        responsePayload,
         JSONCompareMode.STRICT
       );
   }
@@ -137,7 +137,6 @@ class ProductControllerTest extends ControllerTestSupport {
         .getContentAsString();
 
     JSONAssert.assertEquals(
-      responsePayload,
       """
         {
           "code": 400,
@@ -146,6 +145,7 @@ class ProductControllerTest extends ControllerTestSupport {
           "data": null
         }
         """,
+      responsePayload,
       JSONCompareMode.STRICT
     );
   }
@@ -173,7 +173,6 @@ class ProductControllerTest extends ControllerTestSupport {
         .getResponse()
         .getContentAsString();
     JSONAssert.assertEquals(
-      responsePayload,
       """
         {
           "code": 400,
@@ -182,6 +181,7 @@ class ProductControllerTest extends ControllerTestSupport {
           "data": null
         }
         """,
+      responsePayload,
       JSONCompareMode.STRICT
     );
   }
@@ -208,7 +208,6 @@ class ProductControllerTest extends ControllerTestSupport {
       .getResponse()
       .getContentAsString();
     JSONAssert.assertEquals(
-      responsePayload,
       """
       {
         "code": 400,
@@ -217,6 +216,7 @@ class ProductControllerTest extends ControllerTestSupport {
         "data": null
       }
       """,
+      responsePayload,
       JSONCompareMode.STRICT
     );
   }
