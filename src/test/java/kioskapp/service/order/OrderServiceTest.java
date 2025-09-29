@@ -64,12 +64,13 @@ class OrderServiceTest extends IntegrationTestSupport {
 
       // then
       assertThat(orderCreateResponse.getId()).isNotNull();
-      assertThat(orderCreateResponse.getProductResponses()).hasSize(2)
-              .extracting("productNumber", "name", "price")
-              .containsExactlyInAnyOrder(
-                      tuple("001", "아메리카노", 4000),
-                      tuple("002", "카페라떼", 4500)
-              );
+      assertThat(orderCreateResponse.getProductResponses())
+        .hasSize(2)
+        .extracting("productNumber", "name", "price")
+        .containsExactlyInAnyOrder(
+          tuple("001", "아메리카노", 4000),
+          tuple("002", "카페라떼", 4500)
+        );
     }
 
     @Test
@@ -85,12 +86,13 @@ class OrderServiceTest extends IntegrationTestSupport {
       // when
       OrderCreateResponse orderCreateResponse = orderService.createOrder(orderRequest.toServiceRequest());
       // then
-      assertThat(orderCreateResponse.getProductResponses()).hasSize(2)
-              .extracting("name", "price")
-              .containsExactlyInAnyOrder(
-                      tuple("콜드브루", 5500),
-                      tuple("콜드브루", 5500)
-              );
+      assertThat(orderCreateResponse.getProductResponses())
+        .hasSize(2)
+        .extracting("name", "price")
+        .containsExactlyInAnyOrder(
+          tuple("콜드브루", 5500),
+          tuple("콜드브루", 5500)
+        );
     }
 
     // given 에 필요한 데이터만 주기 위해 product 생성 helper 메소드
@@ -137,7 +139,9 @@ class OrderServiceTest extends IntegrationTestSupport {
         Product morningApple = createProduct(BOTTLE, "007", "아침에 사과", 2500, new Stock(0));
         productRepository.save(morningApple);
         var productNumbers = List.of("007");
-        var orderRequest = OrderCreateRequest.builder().productNumbers(productNumbers).build();
+        var orderRequest = OrderCreateRequest.builder()
+          .productNumbers(productNumbers)
+          .build();
 
         // when // then
         assertThatThrownBy(() -> orderService.createOrder(orderRequest.toServiceRequest()))
@@ -152,7 +156,9 @@ class OrderServiceTest extends IntegrationTestSupport {
       Product garlicBread = createProduct(BOTTLE, "008", "마늘빵", 3000, new Stock(1));
       productRepository.save(garlicBread);
       var productNumbers = List.of("008", "008");
-      var orderRequest = OrderCreateRequest.builder().productNumbers(productNumbers).build();
+      var orderRequest = OrderCreateRequest.builder()
+        .productNumbers(productNumbers)
+        .build();
 
       // when // then
       assertThatThrownBy(() -> orderService.createOrder(orderRequest.toServiceRequest()))
