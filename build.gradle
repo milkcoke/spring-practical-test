@@ -11,13 +11,13 @@ java {
     toolchain {
         // Minimum version of JDK used to compile
         // This is used really at the compile time.
-        languageVersion = JavaLanguageVersion.of(21)
+        languageVersion = JavaLanguageVersion.of(25)
     }
     // Minimum java code version supported
     // This is not really related to which jdk (compiler) should be used in compile time
-    sourceCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_25
     // Minimum version of Java Runtime version to execute .class (java byte code)
-    targetCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_25
 }
 
 configurations {
@@ -37,7 +37,7 @@ dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-    implementation 'com.google.guava:guava:33.5.0-jre'
+    implementation 'com.google.guava:guava:33.6.0-jre'
 
     //test
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
