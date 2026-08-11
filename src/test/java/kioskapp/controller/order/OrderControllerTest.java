@@ -4,7 +4,6 @@ import kioskapp.ControllerTestSupport;
 import kioskapp.controller.order.dto.OrderCreateRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -34,7 +33,7 @@ class OrderControllerTest extends ControllerTestSupport {
         .andDo(print())
         .andExpect(status().isBadRequest())
         .andExpect(jsonPath("$.code").value("400"))
-        .andExpect(jsonPath("$.status").value("BAD_REQUEST"))
+        .andExpect(jsonPath("$.status").value("400 BAD_REQUEST"))
         .andExpect(jsonPath("$.message").value("product number is required"))
         .andExpect(jsonPath("$.data").isEmpty());
   }
@@ -58,7 +57,7 @@ class OrderControllerTest extends ControllerTestSupport {
         .andDo(print())
         .andExpect(status().isCreated())
         .andExpect(jsonPath("$.code").value("201"))
-        .andExpect(jsonPath("$.status").value("CREATED"))
+        .andExpect(jsonPath("$.status").value("201 CREATED"))
         .andExpect(jsonPath("$.message").value("CREATED"))
         .andExpect(jsonPath("$.data").isEmpty());
   }

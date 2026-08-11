@@ -1,14 +1,14 @@
 package kioskapp;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import kioskapp.controller.order.OrderController;
 import kioskapp.controller.product.ProductController;
 import kioskapp.service.order.OrderService;
 import kioskapp.service.product.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
+import tools.jackson.databind.ObjectMapper;
 
 // SpringBoot Test 는 전체 Bean Context 를 띄운다면
 // WebMVC Test 는 Controller 관련 Bean 만 올리는 가벼운 테스트 Annotation.

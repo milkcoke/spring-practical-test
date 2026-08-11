@@ -35,7 +35,7 @@ class ProductControllerTest extends ControllerTestSupport {
 """
         {
           "code": 200,
-          "status": "OK",
+          "status": "200 OK",
           "message": "OK",
           "data": []
         }
@@ -71,7 +71,7 @@ class ProductControllerTest extends ControllerTestSupport {
 """
       {
         "code": 201,
-        "status": "CREATED",
+        "status": "201 CREATED",
         "message": "CREATED",
         "data": null
       }
@@ -105,7 +105,7 @@ class ProductControllerTest extends ControllerTestSupport {
       """
         {
           "code": 400,
-          "status": "BAD_REQUEST",
+          "status": "400 BAD_REQUEST",
           "message": "product name is required",
           "data": null
         }
@@ -140,7 +140,7 @@ class ProductControllerTest extends ControllerTestSupport {
       """
         {
           "code": 400,
-          "status": "BAD_REQUEST",
+          "status": "400 BAD_REQUEST",
           "message": "product type is required",
           "data": null
         }
@@ -176,7 +176,7 @@ class ProductControllerTest extends ControllerTestSupport {
       """
         {
           "code": 400,
-          "status": "BAD_REQUEST",
+          "status": "400 BAD_REQUEST",
           "message": "product selling status is required",
           "data": null
         }
@@ -211,7 +211,7 @@ class ProductControllerTest extends ControllerTestSupport {
       """
       {
         "code": 400,
-        "status": "BAD_REQUEST",
+        "status": "400 BAD_REQUEST",
         "message": "price should be greater than or equal to zero",
         "data": null
       }
